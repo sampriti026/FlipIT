@@ -1,0 +1,25 @@
+.account{
+    color: #7A8081;
+    padding-left: 20px;
+    padding-top: 8px;
+}
+
+.summary {
+ padding-left: 20px;
+ padding-top: 4px;
+}
+
+
+.button-bid{
+    width: fit-content;
+    position: relative;
+    background-color: #FF663E;
+    /* margin-left: 700px;
+    margin-top: 220px; */
+    border-radius: 5px;
+    height: 40px;
+    border-color: #FF663E;
+    margin-left: 10px;
+    /* color: #FFFFFF; */
+}
+

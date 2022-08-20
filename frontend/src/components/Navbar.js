@@ -13,7 +13,6 @@ import Sellingform from './Sellingform'
 
 function NavbarComponent({currentAccount, setCurrentAccount}) {
 
-  // const [currentAccount, setCurrentAccount] = useState("");
   const [showComponent, setShowComponent] = useState("false")
   const navigate = useNavigate();
 
@@ -124,7 +123,7 @@ function NavbarComponent({currentAccount, setCurrentAccount}) {
     <div>
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand className="mr-4" href="/">Flippa</Navbar.Brand>
+        <Navbar.Brand className="mr-4" href="/">FlipIt</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
