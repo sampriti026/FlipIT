@@ -17,6 +17,8 @@ function Listings({ list, setList, setId, id }) {
   //const [id, setId] = useState();
   //let id = useParams();
 
+  
+
   const shortenAddress = (address) =>
     `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
 

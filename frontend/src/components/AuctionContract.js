@@ -9,11 +9,18 @@ import Card from "react-bootstrap/Card";
 
 function AuctionContract({ id, currentAccount }) {
   const [bidAmount, setBidAmount] = useState();
+  const [balance, setBalance] = useState();
+  const [highestbid, setHighestbid] = useState();
   let params = useParams();
 
   useEffect(() => {
     localStorage.setItem("id", JSON.stringify(id));
   }, [id]);
+
+  useEffect(() => {
+    getBalance();
+    console.log(balance, "balance");
+  }, []);
 
   const shortenAddress = (address) =>
     `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
@@ -56,7 +63,10 @@ function AuctionContract({ id, currentAccount }) {
           Auction.abi,
           signer
         );
-
+        const numStr = await provider.getBalance(id.contract);
+        const weiValue = parseInt(numStr);
+        const ethValue = ethers.utils.formatEther(weiValue);
+        setBalance(ethValue);
         let auctionTxn = await connectedContract.auctionEnd();
         await auctionTxn.wait();
         console.log(`Auction ended, see transaction: ${auctionTxn.hash}`);
@@ -92,10 +102,43 @@ function AuctionContract({ id, currentAccount }) {
     }
   };
 
+  const getBalance = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const numStr = await provider.getBalance(id.contract);
+        const weiValue = parseInt(numStr);
+        const ethValue = ethers.utils.formatEther(weiValue);
+        setBalance(ethValue);
+        const contract = new ethers.Contract(id.contract, [
+          'function highestBid() public view returns (uint256)'
+       ], provider)
+       
+       let bid = await contract.highestBid();
+       let weiBid = parseInt(bid);
+       bid = ethers.utils.formatEther(bid);
+       bid = bid.toString(bid)
+
+       setHighestbid(bid);
+       
+       
+
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const renderEndAuction = () => {
     return (
       <div>
-        <Button className="button-bid" onClick={endAuction}>End Auction</Button>
+        <button className="button-end" onClick={endAuction}>
+          End Auction
+        </button>
       </div>
     );
   };
@@ -103,58 +146,66 @@ function AuctionContract({ id, currentAccount }) {
   const renderConfirmDelivery = () => {
     return (
       <div>
-        <Button className="button-bid" onClick={confirmDelivery}>Confirm Delivery</Button>
+        <button className="button-confirm" onClick={confirmDelivery}>
+          Confirm Delivery
+        </button>
       </div>
     );
   };
 
   return (
-    <div>
-      <h6
-        style={{ fontSize: 20 }}
-        className="text-start mb-2 text-muted account"
-      >
-        Seller: {shortenAddress(id.account)}
-      </h6>
-      <h3 className="text-start summary">{id.summary}</h3>
-      <h5 className="text-start summary">{id.website}</h5>
-      <p className="text-start summary">{id.about}</p>
-      <h5 className="text-start summary">Profit</h5>
-      <h6 className="text-start summary">{id.profit}</h6>
-      <h5 className="text-start summary">Assets for Sale</h5>
-      <h6 className="text-start summary">{id.deal}</h6>
-      <h6 className="text-start summary"> Asking Price: {id.price}</h6>
-      {id.contract === !null ? (
-        <h6
-          style={{ fontSize: 20 }}
-          className="text-start mb-2 text-muted account"
-        >
-          Auction Contract Address: {shortenAddress(id.contract)}
-        </h6>
-      ) : null}
-      <Card style={{ width: "18rem" }}>
-        <Card.Body>
-          <Card.Title className="text-start">
-            Enter Bidding amount in Matic:
-          </Card.Title>
-          <input onChange={(e) => setBidAmount(e.target.value)} />
-          <Button className="button-bid" onClick={bid}>
-            BID
-          </Button>
-          {id.account === currentAccount
-            ? renderEndAuction()
-            : renderConfirmDelivery()}
-          {renderConfirmDelivery()}
+    <div className="card-style">
 
-          <Card.Subtitle className="mb-2 text-muted">
-            Card Subtitle
-          </Card.Subtitle>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-        </Card.Body>
-      </Card>
+        <div className="card-style">
+          <h6
+            style={{ fontSize: 20 }}
+            className="text-start mb-2 text-muted account"
+          >
+            Seller: {shortenAddress(id.account)}
+          </h6>
+          <h3 className="text-start summary">{id.summary}</h3>
+          <h5 className="text-start summary">{id.website}</h5>
+          <p className="text-start summary">{id.about}</p>
+          <h5 className="text-start summary">Profit</h5>
+          <h6 className="text-start summary">{id.profit}</h6>
+          <h5 className="text-start summary">Assets for Sale</h5>
+          <h6 className="text-start summary">{id.deal}</h6>
+          <h6 className="text-start summary"> Asking Price: {id.price}</h6>
+          <h6 className="text-start summary"> Contract: {id.contract}</h6>
+          {id.contract === !null ? (
+            <h6
+              style={{ fontSize: 20 }}
+              className="text-start mb-2 text-muted account"
+            >
+              Auction Contract Address: {shortenAddress(id.contract)}
+            </h6>
+          ) : null}
+        </div>
+
+      <div style={{ display: "flex" }}>
+        <Card className="card-size" style={{ width: "28rem" }}>
+          <Card.Body>
+            <Card.Title className="text-start">
+              Enter Bidding amount in Matic:
+            </Card.Title>
+            <input onChange={(e) => setBidAmount(e.target.value)} />
+            <button className="button-bid" onClick={bid}>
+              BID
+            </button>
+            {id.account === currentAccount
+              ? renderEndAuction()
+              : renderConfirmDelivery()}
+            {renderConfirmDelivery()}
+
+            <Card.Subtitle className="mb-2 text-muted">
+              Balance:{balance}
+            </Card.Subtitle>
+            <Card.Subtitle className="mb-2 text-muted">
+              Highest Bid:{highestbid}
+            </Card.Subtitle>
+          </Card.Body>
+        </Card>
+      </div>
     </div>
   );
 }

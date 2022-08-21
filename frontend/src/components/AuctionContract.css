@@ -9,17 +9,58 @@
  padding-top: 4px;
 }
 
+.card-style{
+    /* display: flex; */
+    flex-direction: row;
+}
+
+.card-size{
+    width: 1500px;
+    height: fit-content;
+}
 
 .button-bid{
     width: fit-content;
-    position: relative;
+    /* position: absolute; */
     background-color: #FF663E;
     /* margin-left: 700px;
     margin-top: 220px; */
     border-radius: 5px;
     height: 40px;
     border-color: #FF663E;
-    margin-left: 10px;
-    /* color: #FFFFFF; */
+    color: #FFFFFF;
+}
+
+.button-end{
+    width: fit-content;
+    position: relative;
+    background-color: #FF663E;
+    display: flex;
+    margin-left: 350px;
+    padding-top: 5px;
+    margin-top: 12px;
+    border-radius: 5px;
+    height: 40px;
+    border-color: #FF663E;
+    color: #FFFFFF;
+}
+
+.button-confirm{
+    width: fit-content;
+    position: relative;
+    display: flex;
+    background-color: #FF663E;
+    margin-left: 350px;
+    margin-top: 12px;
+    padding-top: 5px;
+    border-radius: 5px;
+    height: 40px;
+    border-color: #FF663E;
+    color: #FFFFFF;
+}
+
+.card-subtitle {
+    position: relative;
+    margin-top: 5px;
 }
 
