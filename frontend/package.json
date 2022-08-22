@@ -45,9 +45,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.18.10",
-    "@babel/eslint-parser": "^7.18.9",
-    "dotenv": "^16.0.1",
-    "eslint-plugin-react": "^7.30.1"
+    "dotenv": "^16.0.1"
   }
 }
