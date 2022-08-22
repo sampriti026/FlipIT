@@ -9,18 +9,14 @@ import Box from "@mui/material/Box";
 import Card from "react-bootstrap/Card";
 import AuctionContract from "./AuctionContract";
 
-
-
 function Listings({ list, setList, setId, id }) {
-  
-  
   //const [id, setId] = useState();
   //let id = useParams();
 
-  
-  
   const shortenAddress = (address) =>
     `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
+
+  const shortenAbout = (text) => `${text.slice(0, 55)}...`;
 
   let navigate = useNavigate();
   const routeChange = (path) => {
@@ -30,13 +26,9 @@ function Listings({ list, setList, setId, id }) {
     navigate(path);
   };
 
-  useEffect(()=>{
-    localStorage.setItem('list', JSON.stringify(list))
-},[list]);
-
-
-
-
+  useEffect(() => {
+    localStorage.setItem("list", JSON.stringify(list));
+  }, [list]);
 
   const array = [];
   const [show, setShow] = useState();
@@ -77,7 +69,7 @@ function Listings({ list, setList, setId, id }) {
   const renderUI = () => {
     // setShow(!show);
     //onClick={() => routeChange(item.account)}
-    console.log(list)
+    console.log(list);
     return (
       <div>
         {list.map((item) => (
@@ -85,13 +77,22 @@ function Listings({ list, setList, setId, id }) {
             {/* <Link to={`/listings/${item.account}`} onClick={()=> setId(item) }>View Listing</Link> */}
             <Card.Subtitle className="mb-2 text-muted text-start">
               {/* {item.account === !null ? <Card.Subtitle className="mb-2 text-muted text-start">shortenAddress(item.account)</Card.Subtitle>: null} */}
-              {item.account}
+              {shortenAddress("afkdjadfjakfdsfkfaslkdjfhaskdhfa")}
             </Card.Subtitle>
-            <Card.Title className="text-start">
-              {item.summary}
-            </Card.Title>
+            <Card.Subtitle className="mb-2 text-muted text-end price">
+              Asking Price: {item.price}
+            </Card.Subtitle>
+            <Card.Title className="text-start">{item.summary}</Card.Title>
             <Card.Body className="text-start">{item.about}</Card.Body>
-            <button className="Button" onClick={() => {routeChange(item.account); setId(item)}}>View Listing</button>
+            <button
+              className="Button"
+              onClick={() => {
+                routeChange(item.account);
+                setId(item);
+              }}
+            >
+              View Listing
+            </button>
           </Card>
         ))}
         <Outlet />
@@ -107,7 +108,6 @@ function Listings({ list, setList, setId, id }) {
       const metadata = await getMetadata(upload.cid);
 
       array.push(metadata);
-
     }
     setList(array);
     console.log(list, "state");
@@ -115,7 +115,10 @@ function Listings({ list, setList, setId, id }) {
 
   return (
     <div>
-      <h1 className="h1" style={{fontSize: 28}}>Marketplace of revenue generating content, apps, and other online business...</h1>
+      <h1 className="h1" style={{ fontSize: 28 }}>
+        Marketplace of revenue generating content, apps, and other online
+        business...
+      </h1>
       {list !== "" ? renderUI() : null}
       <Button onClick={listUploads}>LIST</Button>
       {/* {show === true ? renderUI() : null} */}

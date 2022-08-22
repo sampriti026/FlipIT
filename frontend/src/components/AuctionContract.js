@@ -240,9 +240,12 @@ function AuctionContract({ id, currentAccount }) {
             <Card.Subtitle className="mb-2 text-muted">
               Contract Balance: {balance} MATIC
             </Card.Subtitle>
+   
+           <div>
             <Card.Subtitle className="mb-2 text-muted">
               Highest Bid: {highestbid} MATIC
             </Card.Subtitle>
+            </div> 
           </Card.Body>
         </Card>
       </div>
