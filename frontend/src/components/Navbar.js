@@ -65,9 +65,9 @@ function NavbarComponent({currentAccount, setCurrentAccount}) {
       console.log("Connected to chain " + chainId);
 
       // String, hex code of the chainId of the Rinkebey test network
-      const rinkebyChainId = "0x4";
+      const rinkebyChainId = "0x137";
       if (chainId !== rinkebyChainId) {
-        alert("You are not connected to the Rinkeby Test Network!");
+        alert("You are not connected to the Polygon Test Network!");
       }
 
       // Setup listener! This is for the case where a user comes to our site

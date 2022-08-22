@@ -18,7 +18,7 @@ function Listings({ list, setList, setId, id }) {
   //let id = useParams();
 
   
-
+  
   const shortenAddress = (address) =>
     `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
 
@@ -84,7 +84,8 @@ function Listings({ list, setList, setId, id }) {
           <Card>
             {/* <Link to={`/listings/${item.account}`} onClick={()=> setId(item) }>View Listing</Link> */}
             <Card.Subtitle className="mb-2 text-muted text-start">
-              {shortenAddress(item.account)}
+              {/* {item.account === !null ? <Card.Subtitle className="mb-2 text-muted text-start">shortenAddress(item.account)</Card.Subtitle>: null} */}
+              {item.account}
             </Card.Subtitle>
             <Card.Title className="text-start">
               {item.summary}
