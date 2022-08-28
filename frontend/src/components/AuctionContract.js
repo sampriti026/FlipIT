@@ -157,14 +157,14 @@ function AuctionContract({ id, currentAccount }) {
   };
 
   const renderEndAuction = () => {
-    if(ended === false){
-    return (
-      <div>
-        <button className="button-end" onClick={endAuction}>
-          End Auction
-        </button>
-      </div>
-    );
+    if (ended === false) {
+      return (
+        <div>
+          <button className="button-end" onClick={endAuction}>
+            End Auction
+          </button>
+        </div>
+      );
     }
   };
 
@@ -174,19 +174,12 @@ function AuctionContract({ id, currentAccount }) {
         <button className="button-confirm" onClick={confirmDelivery}>
           Confirm Delivery
         </button>
-      </div>
-    );
-  };
-
-  const renderWithdraw = () => {
-    return (
-      <div>
-        <button className="button-confirm" onClick={withdraw}> 
+        <button className="button-confirm" onClick={withdraw}>
           Withdraw
         </button>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="card-style">
@@ -235,18 +228,16 @@ function AuctionContract({ id, currentAccount }) {
             {id.account === currentAccount
               ? renderEndAuction()
               : renderConfirmDelivery()}
-              {renderWithdraw()}
-            
 
             <Card.Subtitle className="mb-2 text-muted">
               Contract Balance: {balance} MATIC
             </Card.Subtitle>
-   
-           <div>
-            <Card.Subtitle className="mb-2 text-muted">
-              Highest Bid: {highestbid} MATIC
-            </Card.Subtitle>
-            </div> 
+
+            <div>
+              <Card.Subtitle className="mb-2 text-muted">
+                Highest Bid: {highestbid} MATIC
+              </Card.Subtitle>
+            </div>
           </Card.Body>
         </Card>
       </div>
