@@ -235,7 +235,8 @@ function AuctionContract({ id, currentAccount }) {
             {id.account === currentAccount
               ? renderEndAuction()
               : renderConfirmDelivery()}
-            {ended === true ? renderWithdraw() : null}
+              {renderWithdraw()}
+            
 
             <Card.Subtitle className="mb-2 text-muted">
               Contract Balance: {balance} MATIC

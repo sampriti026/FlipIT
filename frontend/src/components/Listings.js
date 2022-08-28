@@ -1,17 +1,17 @@
 import "./Listings.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Web3Storage } from "web3.storage";
-import { useNavigate, useParams } from "react-router-dom";
-import { Link, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import AuctionContract from "./AuctionContract";
 
 function Listings({ list, setList, setId, id }) {
   //const [id, setId] = useState();
   //let id = useParams();
 
+  
   const shortenAddress = (address) =>
     `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
 
@@ -29,13 +29,17 @@ function Listings({ list, setList, setId, id }) {
     localStorage.setItem("list", JSON.stringify(list));
   }, [list]);
 
-  const array = [];
+
+  let array = [];
+  let listing = [];
   const [show, setShow] = useState();
 
   useEffect(() => {
-    // Update the document title using the browser API
-    //listUploads();
-    //console.log("list upload was called.");
+   
+    listUploads();
+    console.log('i fire once');
+
+
   }, []);
 
   const getAccessToken = () => {
@@ -100,17 +104,61 @@ function Listings({ list, setList, setId, id }) {
   };
 
   async function listUploads() {
+    let start = performance.now()
     const client = makeStorageClient();
+    let end = performance.now()
+    console.log(`makeStorageClient ${end - start}ms`)
+    start = end
     for await (const upload of client.list()) {
       console.log(`${upload.name} - cid: ${upload.cid}`);
 
       const metadata = await getMetadata(upload.cid);
 
       array.push(metadata);
+
     }
+    // end = performance.now()
+    // console.log(`client.list ${end - start}ms`)
+    // start = end
     setList(array);
-    console.log(list, "state");
+    // end = performance.now()
+    // console.log(`setList ${end - start}ms`)
+    // start = end
+    console.log(array, "array");
   }
+
+  // async function listUploads() {
+  //   let start = performance.now() // using performance because it's more precise
+  //   const client = makeStorageClient();
+  //   let end = performance.now()
+  //   console.log(`makeStorageClient ${end - start}ms`)
+  //   start = end
+
+  //   for await (const obj of client.list()) {
+  //     list.push(obj);
+  //   }
+  //   end = performance.now()
+  //   console.log(`client.list ${end - start}ms`)
+  //   start = end
+
+  //   array = array.concat(
+  //     await Promise.all(
+  //       list.map(async (upload) => {
+  //         console.log(`${upload.name} - cid: ${upload.cid}`);
+
+  //         return await getMetadata(upload.cid);
+  //       })
+  //     )
+  //   );
+  //   end = performance.now()
+  //   console.log(`Promise.all ${end - start}ms`)
+  //   start = end
+  //   setList(array);
+  //   end = performance.now()
+  //   console.log(`setList ${end - start}ms`)
+  //   start = end
+       
+  // }
 
   return (
     <div>
