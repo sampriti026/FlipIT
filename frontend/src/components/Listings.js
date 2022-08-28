@@ -4,7 +4,6 @@ import { Web3Storage } from "web3.storage";
 import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
 function Listings({ list, setList, setId, id }) {

@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import Auction from "../utils/Auction.json";
 import { ethers } from "ethers";
-import { useParams } from "react-router-dom";
-import Button from "react-bootstrap/Button";
 import "./AuctionContract.css";
 import Card from "react-bootstrap/Card";
 
@@ -12,7 +10,6 @@ function AuctionContract({ id, currentAccount }) {
   const [balance, setBalance] = useState();
   const [highestbid, setHighestbid] = useState();
   const [ended, setEnded] = useState(false);
-  let params = useParams();
 
   useEffect(() => {
     localStorage.setItem("id", JSON.stringify(id));
