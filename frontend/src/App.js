@@ -46,10 +46,7 @@ function App() {
           <Route path="listings" element={<Listings list={list} setList={setList} id={id} setId={setId}/>}/>
           <Route path='listings/:account' exact element={<AuctionContract list={list} id={id} currentAccount={currentAccount}/>}/>
           
-          {/* <Route
-            path="auction"
-            element={<AuctionContract contractAddress={contractAddress} list={list} />}
-          /> */}
+
 
         <Route path="chat" element={<Chat currentAccount={currentAccount} id={id}/>}/>
         </Routes>
