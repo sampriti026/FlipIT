@@ -4,3 +4,6 @@ FlipIt is a decentralised application for digital assets owner to list their ass
 
 ## 🛠 Tech Stack and Integrations
 - React, Javascript, Solidity, Etherjs, Web3.storage, XMTP protocol for messaging. 
+
+## Link
+- flipmyasset.netlify.app
