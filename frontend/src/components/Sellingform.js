@@ -1,7 +1,6 @@
 import Form from "react-bootstrap/Form";
 import "./Sellingform.css";
-import Button from "react-bootstrap/Button";
-import { useState, useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Web3Storage } from "web3.storage";
 import { File } from "web3.storage";
 import { ListContext } from "./Context";
@@ -9,12 +8,7 @@ import { ethers } from "ethers";
 import Auction from "../utils/Auction.json";
 import { bytecode } from "../utils/Bytecode";
 
-function Sellingform({ currentAccount, contractAddress, setContractAddress}) {
-  const [show, setShow] = useState("");
-  //const [contractAddress, setContractAddress] = useState("");
-  const [id, setId] = useState("");
-  const [list, setList] = useState([]);
-
+function Sellingform({ currentAccount, setContractAddress }) {
   let contract;
   const listCtx = useContext(ListContext);
 
@@ -22,37 +16,22 @@ function Sellingform({ currentAccount, contractAddress, setContractAddress}) {
 
   const values = listCtx.values;
   const setValues = listCtx.setValues;
-  
-  useEffect(() => {
-   //setContractAddress(contract)
-   console.log(contractAddress)
-   console.log(values)
-
-}, [contractAddress]);
-
-  useEffect(() => {
-      console.log(values)
-  }, [values.contract])
 
   const handleInputChange = (e) => {
     //const name = e.target.name
     //const value = e.target.value
     const { name, value } = e.target;
 
-    
-   
-    setValues(prev => ({
+    setValues((prev) => ({
       ...prev,
       [name]: value,
       account: currentAccount,
-      
     }));
-    
   };
 
-  const setAccount = () => {
-    makeFileObjects();
-   
+  const setAccount = async () => {
+    await startAuction();
+    await makeFileObjects();
   };
 
   const getAccessToken = () => {
@@ -82,7 +61,7 @@ function Sellingform({ currentAccount, contractAddress, setContractAddress}) {
   async function storeData(files) {
     const client = makeStorageClient();
     const cid = await client.put(files);
-    setId(cid);
+
     const uri = `ipfs://${cid}/done`;
 
     console.log("stored files with cid:", `https://${cid}.ipfs.dweb.link/done`);
@@ -94,7 +73,6 @@ function Sellingform({ currentAccount, contractAddress, setContractAddress}) {
     return `https://${cid}.ipfs.dweb.link/done`;
   }
 
-  
   const startAuction = async () => {
     try {
       const { ethereum } = window;
@@ -102,27 +80,28 @@ function Sellingform({ currentAccount, contractAddress, setContractAddress}) {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        const factory = new ethers.ContractFactory(Auction.abi, bytecode, signer);
+        const factory = new ethers.ContractFactory(
+          Auction.abi,
+          bytecode,
+          signer
+        );
         const auctionContract = await factory.deploy(currentAccount);
         //await setContractAddress(auctionContract.address);
         await auctionContract.deployed();
         await console.log("Auction Contract Address:", auctionContract.address);
         contract = await auctionContract.address;
-        
-        setContractAddress(contract)
-        setValues(prev => ({...prev, contract: contract}))
-        
+
+        setContractAddress(contract);
+        setValues((prev) => ({ ...prev, contract: contract }));
+
         // await setContractAddress(contract);
         // await console.log(contractAddress);
-
-        
       } else {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
       console.log(error);
     }
-     
   };
 
   async function getMetadata(cid) {
@@ -138,33 +117,32 @@ function Sellingform({ currentAccount, contractAddress, setContractAddress}) {
     return metadata;
   }
 
-  const renderPrice = () => {
-    setShow(!show);
-    
-  };
-
   const renderPriceUI = () => (
     <>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label className="label">Enter the terms of the deal</Form.Label>
+        <Form.Label className="label">
+          What assets are you offering to the buyer?
+        </Form.Label>
         <Form.Control
-          placeholder="10% of equity in exchange of $2900"
+          placeholder="Domain, Social Media Access, After-Sale Support"
           name="deal"
           value={values.deal}
           onChange={handleInputChange}
         />
       </Form.Group>
-      <Form.Label className="label">Starting price for Auction</Form.Label>
+      <Form.Label className="label">
+        Starting price for Auction in USD
+      </Form.Label>
       <Form.Control
-        placeholder="$2900"
+        placeholder="290"
         name="price"
         value={values.price}
         onChange={handleInputChange}
       />
 
-      <Button onClick={setAccount}>Done</Button>
-      <Button onClick={startAuction}>Start Auction</Button>
-      
+      <button className="done-button" onClick={setAccount}>
+        Done and Start Auction
+      </button>
     </>
   );
 
@@ -174,7 +152,7 @@ function Sellingform({ currentAccount, contractAddress, setContractAddress}) {
       <Form>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
           <Form.Label className="label">
-            Enter your URL to start selling
+            Do you have a website for your business?
           </Form.Label>
           <Form.Control
             name="website"
@@ -212,20 +190,53 @@ function Sellingform({ currentAccount, contractAddress, setContractAddress}) {
           <Form.Control type="file" />
         </Form.Group> */}
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-          <Form.Label className="label">Enter annual net profit.</Form.Label>
+          <Form.Label className="label">
+            Enter annual revenue in USD.
+          </Form.Label>
           <Form.Control
-            placeholder="$1400"
+            placeholder="1800"
+            name="revenue"
+            onChange={handleInputChange}
+            value={values.revenue}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Label className="label">
+            Enter annual net profit in USD.
+          </Form.Label>
+          <Form.Control
+            placeholder="1400"
             name="profit"
             onChange={handleInputChange}
             value={values.profit}
           />
         </Form.Group>
+
+        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Label className="label">
+            What are your monetization methods?
+          </Form.Label>
+          <Form.Control
+            placeholder="Ads, Affiliate Sales, Print-on-demand...etc. "
+            name="sources"
+            onChange={handleInputChange}
+            value={values.sources}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Label className="label">
+            What are your Primary Expenses?
+          </Form.Label>
+          <Form.Control
+            placeholder="Shipping, Web Hosting. "
+            name="expenses"
+            onChange={handleInputChange}
+            value={values.expenses}
+          />
+        </Form.Group>
       </Form>
-      <h3 className="h3">Finished all you can?</h3>
-      <Button className="price-button" onClick={renderPrice} variant="success">
-        Proceed to pricing
-      </Button>{" "}
-      {show === true ? renderPriceUI() : null}
+
+      {renderPriceUI()}
     </>
   );
 }

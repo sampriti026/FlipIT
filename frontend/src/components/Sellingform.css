@@ -22,3 +22,14 @@
     margin-bottom: 30px;
     width: 230px;
 }
+
+.done-button{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    background-color: #FF663E;
+    border-radius: 5px;
+    width: 150px;
+    height: 60px;
+    border-color: #FF663E;
+    color: #FFFFFF;
+}

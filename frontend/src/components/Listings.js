@@ -1,19 +1,16 @@
 import "./Listings.css";
-import { useState, useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { Web3Storage } from "web3.storage";
-import { useNavigate, useParams } from "react-router-dom";
-import { Link, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
-import Button from "react-bootstrap/Button";
-import Box from "@mui/material/Box";
 import Card from "react-bootstrap/Card";
-import AuctionContract from "./AuctionContract";
 
 function Listings({ list, setList, setId, id }) {
-  
-  
-  //const [id, setId] = useState();
-  //let id = useParams();
+  const shortenAddress = (address) =>
+    `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
+
+  const shortenAbout = (text) => `${text.slice(0, 55)}...`;
 
   let navigate = useNavigate();
   const routeChange = (path) => {
@@ -23,21 +20,15 @@ function Listings({ list, setList, setId, id }) {
     navigate(path);
   };
 
-  useEffect(()=>{
-    localStorage.setItem('list', JSON.stringify(list))
-},[list]);
+  useEffect(() => {
+    localStorage.setItem("list", JSON.stringify(list));
+  }, [list]);
 
-
-
-
-
-  const array = [];
-  const [show, setShow] = useState();
+  let array = [];
 
   useEffect(() => {
-    // Update the document title using the browser API
-    //listUploads();
-    //console.log("list upload was called.");
+    listUploads();
+    console.log("i fire once");
   }, []);
 
   const getAccessToken = () => {
@@ -69,20 +60,31 @@ function Listings({ list, setList, setId, id }) {
 
   const renderUI = () => {
     // setShow(!show);
-    console.log(list)
+    //onClick={() => routeChange(item.account)}
+    console.log(list);
     return (
       <div>
         {list.map((item) => (
           <Card>
-            <Link to={`/listings/${item.account}`} onClick={()=> setId(item) }>{item.account}</Link>
-            <Card.Title onClick={() => routeChange(item.account)}>
-              {item.summary}
-            </Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">
-              {item.account}
+            {/* <Link to={`/listings/${item.account}`} onClick={()=> setId(item) }>View Listing</Link> */}
+            <Card.Subtitle className="mb-2 text-muted text-start">
+              {/* {item.account === !null ? <Card.Subtitle className="mb-2 text-muted text-start">shortenAddress(item.account)</Card.Subtitle>: null} */}
+              {shortenAddress("afkdjadfjakfdsfkfaslkdjfhaskdhfa")}
             </Card.Subtitle>
-            <Card.Body>Asking Price: {item.price}</Card.Body>
-            <Button>Auction</Button>
+            <Card.Subtitle className="mb-2 text-muted text-end price">
+              Asking Price: {item.price}
+            </Card.Subtitle>
+            <Card.Title className="text-start">{item.summary}</Card.Title>
+            <Card.Body className="text-start">{item.about}</Card.Body>
+            <button
+              className="Button"
+              onClick={() => {
+                routeChange(item.account);
+                setId(item);
+              }}
+            >
+              View Listing
+            </button>
           </Card>
         ))}
         <Outlet />
@@ -91,45 +93,35 @@ function Listings({ list, setList, setId, id }) {
   };
 
   async function listUploads() {
+    let start = performance.now();
     const client = makeStorageClient();
+    let end = performance.now();
+    console.log(`makeStorageClient ${end - start}ms`);
+    start = end;
     for await (const upload of client.list()) {
       console.log(`${upload.name} - cid: ${upload.cid}`);
 
       const metadata = await getMetadata(upload.cid);
 
       array.push(metadata);
-
     }
+    // end = performance.now()
+    // console.log(`client.list ${end - start}ms`)
+    // start = end
     setList(array);
-    console.log(list, "state");
+    // end = performance.now()
+    // console.log(`setList ${end - start}ms`)
+    // start = end
+    console.log(array, "array");
   }
 
   return (
     <div>
-      <h1>Listings</h1>
+      <h1 className="h1" style={{ fontSize: 28 }}>
+        Marketplace of revenue generating content, apps, and other online
+        business...
+      </h1>
       {list !== "" ? renderUI() : null}
-      <Button onClick={listUploads}>LIST</Button>
-      {/* {show === true ? renderUI() : null} */}
-      <Card>
-        <Card.Title>
-          Newsletter with 4,600+ subscribers that features the most useful
-          websites from around the web.
-        </Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">
-          0xfcd47ab4c757e87b3a0984a2f1dbff9629150b92
-        </Card.Subtitle>
-        <Card.Body>Asking Price: $25000</Card.Body>
-        <Button>Auction</Button>
-        <Card.Title>
-          Newsletter with 4,600+ subscribers that features the most useful
-          websites from around the web.
-        </Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">
-          0xfcd47ab4c757e87b3a0984a2f1dbff9629150b92
-        </Card.Subtitle>
-        <Card.Body>Asking Price: $25000</Card.Body>
-        <Button>Auction</Button>
-      </Card>
     </div>
   );
 }
